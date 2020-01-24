@@ -12,21 +12,27 @@ import 	csv
 
 
 def GO():
+	new_list=['EMPLOYEE_NAME','PRIMARY_DOMAIN','SECONDARY_DOMAIN','MOBILE','EMAIL_ID','CURRENT_CTC','EXPECTED_CTC','NOTICE','DATE_OF_DISCUSSION','CURRENT_LOCATION','PREFERRED_LOCATION' ]
 	my_mobile=l_srch.get()
 	conn = sqlite3.connect('/home/mirafra/ali/new.db')
 	cur=conn.cursor()
-#	cur.execute("SELECT * FROM NEW_TEXT WHERE mobile=='%s';" % my_mobile)
-	cur.execute("SELECT * FROM NEW_TEXT")
+	cur.execute("SELECT * FROM NEW_TEXT WHERE mobile=='%s';" % my_mobile)
+#	cur.execute("SELECT * FROM NEW_TEXT")
 	data=cur.fetchall()
 	cur.close()
 	conn.close()	
+	
 
-#	with open('empl_data.csv','w+') as csv_file:
+#	with open('file.ex.ods','a') as csv_file:
 #		csv_writer=csv.writer(csv_file,delimiter='-')
 #		csv_writer.writerow(data)
-		 
-#
-	print(data)
+	new=list(data[0])
+	
+#	print(new)
+	j=0		 
+	for i in new:
+		print(new_list[j]+'--->'+str(i))
+		j+=1
 	
 def save():
 	emp_name=l1_text.get()	
