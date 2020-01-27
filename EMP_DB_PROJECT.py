@@ -16,7 +16,11 @@ def GO():
 	my_mobile=l_srch.get()
 	conn = sqlite3.connect('/home/mirafra/ali/new.db')
 	cur=conn.cursor()
-	cur.execute("SELECT * FROM NEW_TEXT WHERE mobile=='%s';" % my_mobile)
+         Sql="SELECT * FROM NEW_TEXT WHERE PRIMARY_DOMAIN=my_mobile"
+
+         cur.execute(sql)
+
+#	cur.execute("SELECT * FROM NEW_TEXT WHERE mobile=='%s';" % my_mobile)
 #	cur.execute("SELECT * FROM NEW_TEXT")
 	data=cur.fetchall()
 	cur.close()
