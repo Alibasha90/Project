@@ -1,7 +1,8 @@
+#=========================================  IMPORTING PACKAGES ===================================
+import os
 from tkinter import *
 from tkinter import messagebox
 import sqlite3
-import 	csv
 import xlwt
 from xlwt import Workbook
 
@@ -11,46 +12,30 @@ from xlwt import Workbook
 #===================================================================================================
          
 
+
+#========================================== GO FUNCTION =========================================
 def GO():
+	new=[]
 	new_list=['EMPLOYEE_NAME','PRIMARY_DOMAIN','SECONDARY_DOMAIN','MOBILE','EMAIL_ID','CURRENT_CTC','EXPECTED_CTC','NOTICE','DATE_OF_DISCUSSION','CURRENT_LOCATION','PREFERRED_LOCATION' ]
-	my_mobile=l_srch.get()
-	conn = sqlite3.connect('/home/mirafra/ali/new.db')
+	my_domain=l_srch.get()
+	conn = sqlite3.connect('./new.db')
 	cur=conn.cursor()
-	cur.execute("SELECT * FROM NEW_TEXT WHERE mobile=='%s';" % my_mobile)
-#	cur.execute("SELECT * FROM NEW_TEXT")
+	sql='SELECT * FROM NEW_TEXT WHERE PRIMARY_DOMAIN==\"'+str(my_domain)+'\";'
+	sql='SELECT * FROM NEW_TEXT WHERE SECONDARY_DOMAIN==\"'+str(my_domain)+'\";'
+	sql='SELECT * FROM NEW_TEXT WHERE MOBILE==\"'+str(my_domain)+'\";'
+	sql='SELECT * FROM NEW_TEXT WHERE EMPLOYEE_NAME==\"'+str(my_domain)+'\";'
+	cur.execute(sql)
+#	cur.execute("SELECT * FROM NEW_TEXT")   /// fetch all the data from database.
 	data=cur.fetchall()
 	cur.close()
 	conn.close()	
+	for i in data:
+		new.append(list(i))
 	
 
-#	with open('file.ex.ods','a') as csv_file:
-#		csv_writer=csv.writer(csv_file,delimiter='-')
-#		csv_writer.writerow(data)
-	new=list(data[0])
+	wb = Workbook()         #   Workbook is created
 
-# keys = ['EMPLOYEE_NAME','PRIMARY_DOMAIN','SECONDARY_DOMAIN','MOBILE','EMAIL_ID','CURRENT_CTC','EXPECTED_CTC','NOTICE','DATE_OF_DISCUSSION','CURRENT_LOCATION','PREFERRED_LOCATION' ]
-
- #values = [1, 2, 3]
-#d = dict(zip(keys, values))
-# print(dictionary)
-
-
-	
-#	wb = Workbook()
-#	print(new)
-#	j=0		 
-#	for i in new:
-#		print(new_list[j]+'--->'+str(i))
-#		j+=1
-	
-#		with open('file.ex.ods','a') as csv_file:
-#			csv_writer=csv.writer(csv_file,delimiter='-')
-#			csv_writer.writerow(str(i))
-
-# Workbook is created 
-	wb = Workbook()
-
-# add_sheet is used to create sheet. 
+				# add_sheet is used to create sheet. 
 	sheet1 = wb.add_sheet('Sheet 1')
 
 	sheet1.write(0,0,'EMPLOYEE_NAME')
@@ -64,16 +49,18 @@ def GO():
 	sheet1.write(0,8,'DATE_OF_DISCUSSION')
 	sheet1.write(0,9,'CURRENT_LOCATION')
 	sheet1.write(0,10,'PREFERRED_LOCATION')
+				#  positioning the data into the sheet.	 
+	for pos_r in range(len(new)):
+		x=pos_r
+		pos_r+=1
 		
-	
-	j=0		 
-	for i in new:
-		sheet1.write(1,j,i)
-		j+=1
-	wb.save('ali_data.xls')
+		for pos_c in range(len(new[x])):
+			y=pos_c
+			sheet1.write(pos_r,pos_c,new[x][y])							
+	wb.save('Emp_data.xls')
 
 
-
+#####============================================ SAVE FUNCTION ==================================
 
 def save():
 	emp_name=l1_text.get()
@@ -117,28 +104,16 @@ def save():
 	l11_text.set('')
 #================================================ SQLITE DATABASE STORING ==========================
 		
-#	conn = sqlite3.connect('/home/mirafra/ali/tk/mini_pcj/new.db')
-	conn=sqlite3.connect('/home/mirafra/ali/new.db')
-#	for t in [(emp_name,p_domain,s_domain,mobile,email_id,cctc,ectc,notice,d_of_d,cur_loc,pref_loc)]:
+	conn = sqlite3.connect('./new.db')
+	cur=conn.cursor()
 
-
-
-#	conn.execute(''' INSERT INTO NEW_TEXT (emp_name,p_domain ,s_domain,mobile ,email_id,cctc ,ectc ,notice ,d_of_d , cur_loc ,pref_loc )VALUES(?,?,?,?,?,?,?,?,?,?,?)''',(emp_name,p_domain ,s_domain,mobile ,email_id,cctc ,ectc ,notice ,d_of_d , cur_loc ,pref_loc )  )	
 
 	conn.execute(''' INSERT INTO NEW_TEXT (EMPLOYEE_NAME,PRIMARY_DOMAIN,SECONDARY_DOMAIN,MOBILE,EMAIL_ID, CURRENT_CTC,EXPECTED_CTC,NOTICE,DATE_OF_DISCUSSION,CURRENT_LOCATION,PREFERRED_LOCATION)
 VALUES(?,?,?,?,?,?,?,?,?,?,?)''',( emp_name,p_domain ,s_domain,mobile ,email_id,cctc ,ectc ,notice ,d_of_d , cur_loc ,pref_loc  )  )
 
-
-
-#	conn.execute('INSERT NEW_TEXT values(?,?,?,?,?,?,?,?,?,?,?)',t)
 	conn.commit()	
 	conn.close()
 #====================================================================================================
-
-
-
-
-
 
 #==============================================  MAIN CREATION ======================================
 window = Tk()#--------window creation
