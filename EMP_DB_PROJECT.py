@@ -1,5 +1,4 @@
 #=========================================  IMPORTING PACKAGES ===================================
-import os
 from tkinter import *
 from tkinter import messagebox
 import sqlite3
@@ -22,11 +21,11 @@ def GO():
 	cur=conn.cursor()
 	sql='SELECT * FROM NEW_TEXT WHERE PRIMARY_DOMAIN==\"'+str(my_domain)+'\";'
 	sql='SELECT * FROM NEW_TEXT WHERE SECONDARY_DOMAIN==\"'+str(my_domain)+'\";'
-	sql='SELECT * FROM NEW_TEXT WHERE MOBILE==\"'+str(my_domain)+'\";'
-	sql='SELECT * FROM NEW_TEXT WHERE EMPLOYEE_NAME==\"'+str(my_domain)+'\";'
+#	cur.execute("SELECT * FROM NEW_TEXT")   # fetch all the data from database.
 	cur.execute(sql)
 #	cur.execute("SELECT * FROM NEW_TEXT")   /// fetch all the data from database.
 	data=cur.fetchall()
+	print(data)
 	cur.close()
 	conn.close()	
 	for i in data:
@@ -36,7 +35,7 @@ def GO():
 	wb = Workbook()         #   Workbook is created
 
 				# add_sheet is used to create sheet. 
-	sheet1 = wb.add_sheet('Sheet 1')
+	sheet1 = wb.add_sheet('Sheet')
 
 	sheet1.write(0,0,'EMPLOYEE_NAME')
 	sheet1.write(0,1,'PRIMARY_DOMAIN')
@@ -49,15 +48,17 @@ def GO():
 	sheet1.write(0,8,'DATE_OF_DISCUSSION')
 	sheet1.write(0,9,'CURRENT_LOCATION')
 	sheet1.write(0,10,'PREFERRED_LOCATION')
-				#  positioning the data into the sheet.	 
+	print(new)
+				#  positioning the sheet and data into the sheet.	 
 	for pos_r in range(len(new)):
+		print("for loop")
 		x=pos_r
 		pos_r+=1
-		
 		for pos_c in range(len(new[x])):
 			y=pos_c
-			sheet1.write(pos_r,pos_c,new[x][y])							
-	wb.save('Emp_data.xls')
+			sheet1.write(pos_r,pos_c,new[x][y])
+			print(new[x][y])							
+	wb.save('EMP_data.xls')
 
 
 #####============================================ SAVE FUNCTION ==================================
@@ -83,8 +84,7 @@ def save():
 	if mobile=='':
 		l4_text.set(mobile)
 		messagebox.showwarning("Warning","Mobile number should be Mandatory!")
-		return
-	
+		return	
 
 	if email_id=='':
 		l5_text.set(email_id)
@@ -110,7 +110,7 @@ def save():
 
 	conn.execute(''' INSERT INTO NEW_TEXT (EMPLOYEE_NAME,PRIMARY_DOMAIN,SECONDARY_DOMAIN,MOBILE,EMAIL_ID, CURRENT_CTC,EXPECTED_CTC,NOTICE,DATE_OF_DISCUSSION,CURRENT_LOCATION,PREFERRED_LOCATION)
 VALUES(?,?,?,?,?,?,?,?,?,?,?)''',( emp_name,p_domain ,s_domain,mobile ,email_id,cctc ,ectc ,notice ,d_of_d , cur_loc ,pref_loc  )  )
-
+	messagebox.showinfo("info",'DATA STORED SUCCUESSFULLY')
 	conn.commit()	
 	conn.close()
 #====================================================================================================
@@ -120,7 +120,7 @@ window = Tk()#--------window creation
 
 window.title("Employees Database application")
 
-window.geometry('900x850')
+window.geometry('1024x900')
 
 #----------------------------------------------------- Labels creation -------------------
 
